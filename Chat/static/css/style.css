@@ -1,0 +1,283 @@
+/* Определения переменных для цвета */
+:root {
+  --bg-color: #FFF8DC;
+  --content-bg: #F5DEB3;
+  --border-color: #8B4513;
+  --button-bg: #8B4513;
+  --button-hover-bg: #A0522D;
+  --message-bg: #E0F7FA;
+  --own-message-bg: #DCF8C6;
+  --text-color: #000;
+}
+
+/* Светлая тема (по умолчанию) */
+.theme-light {
+  --bg-color: #FFF8DC;
+  --content-bg: #FFF8DC;
+  --chat-list: #F5DEB3;
+  --border-color: #8B4513;
+  --button-bg: #8B4513;
+  --button-hover-bg: #A0522D;
+  --message-bg: #E0F7FA;
+  --own-message-bg: #DCF8C6;
+  --text-color: #000;
+}
+
+/* Тёмная тема */
+.theme-dark {
+  --bg-color: #121212;
+  --content-bg: #121212;
+  --chat-list: #252525;
+  --border-color: #B5651D;
+  --button-bg: #B5651D;
+  --button-hover-bg: #C67828;
+  --message-bg: #2F3E46;
+  --own-message-bg: #3A6B5B;
+  --text-color: #E0E0E0;
+}
+
+/* Контрастная тема */
+.theme-contrast {
+  --bg-color: #000723;
+  --content-bg: #000723;
+  --chat-list: #0A214C;
+  --border-color: #74BAEC;
+  --button-bg: #74BAEC;
+  --button-hover-bg: #5FADD2;
+  --message-bg: #1F0805;
+  --own-message-bg: #230739;
+  --text-color: #FFF;
+}
+
+/* Применяем только цветовые свойства через переменные */
+/* Тёплый фон для всей страницы */
+html,body {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-color);
+  margin: 0;
+  padding: 0;
+  font-family: Calibri (Body);
+  color: var(--text-color);
+}
+
+/* Голосовые сообщения */
+audio {
+  width: 100%;
+  margin-top: 5px;
+}
+
+h2 {
+  text-align: center;
+}
+
+/* Общий стиль кнопок */
+button {
+  padding: 10px;
+  background-color: var(--button-bg);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: var(--button-hover-bg);
+}
+
+/* Форма загрузки файлов */
+#file-input {
+  display: none;
+}
+
+#online-users-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+#online-users-list li {
+  padding: 5px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+#message {
+  flex: 1;
+  padding: 8px;
+  border: 2px solid var(--border-color);
+  border-radius: 5px;
+  resize: none;
+  min-height: 40px;
+}
+
+/* Часы (общий элемент) */
+#clock {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: var(--border-color);
+  color: #FFFFFF;
+  font-size: 24px;
+  font-family: monospace;
+  padding: 10px 15px;
+  border-radius: 5px;
+}
+
+/* Базовый контейнер из base.html */
+.content {
+  min-height: 0vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 24px;
+  padding: 20px;
+  background-color: var(--content-bg);
+}
+
+/* index.html */
+.index-container {
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  max-width: 1000px;
+  justify-content: space-between;
+}
+
+.login-form,
+.register-form {
+  flex: 1;
+  margin: 10px;
+  background-color: var(--chat-list);
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}
+
+/* chats.html */
+.chats-container {
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  max-width: 1000px;
+  font-size: 20px;
+  justify-content: space-between;
+}
+
+.chat-list,
+.chat-creation {
+  flex: 1;
+  margin: 10px;
+  background-color: var(--chat-list);
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  padding: 20px;
+  font-weight: 650;
+}
+
+/* Контейнер чата (message-box) */
+.message-box {
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  background-color: var(--chat-list);
+  height: 80vh;
+  width: 80vw;
+  max-width: 1000px;
+  display: flex;           /* Новый стиль: flex-контейнер */
+  flex-direction: column;  /* Содержимое расположится по вертикали */
+}
+
+/* Окно сообщений */
+.messages {
+  flex: 1;                 /* Занимает всё доступное пространство */
+  overflow-y: auto;
+  width: 100%;
+  padding: 10px;
+  border-bottom: 1px solid var(--border-color);
+  box-sizing: border-box;
+}
+
+/* Фиксированный блок ввода */
+/* Блок ввода сообщений */
+.inputs {
+  padding: 10px;
+  display: flex;
+  gap: 5px;
+  background: var(--chat-list);
+  box-sizing: border-box;
+  /* Абсолютное позиционирование убрано – теперь inputs находится ниже сообщений */
+}
+
+/* Базовый стиль сообщения ("облако") */
+.text {
+  display: inline-block;
+  max-width: 60%;
+  margin: 5px 0;
+  padding: 10px 15px;
+  border-radius: 20px;
+  background: var(--message-bg);
+  word-wrap: break-word;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  align-self: flex-start;
+}
+
+/* Время сообщения */
+.muted {
+  font-size: 10px;
+  color: darkgray;
+}
+
+/* Кнопки "Редактировать" и "Удалить" */
+.edit-btn, .delete-btn {
+  background-color: var(--border-color);
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.edit-btn:hover, .delete-btn:hover {
+  background-color: var(--button-hover-bg);
+}
+
+.file-label {
+  cursor: pointer;
+  background: var(--button-bg);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  display: inline-block;
+  margin-top: 5px;
+}
+
+.file-label:hover {
+  background: var(--button-hover-bg);
+}
+
+/* Список онлайн пользователей */
+.online-users-container {
+  text-align: center;
+  margin-top: 20px;
+  background-color: var(--content-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  padding: 15px;
+  width: 50%;
+  min-width: 300px;
+}
+
+.online-users-container h3 {
+  margin: 0;
+}
+
+/* Собственные сообщения */
+.own-message {
+  background: var(--own-message-bg);
+  align-self: flex-end;
+}

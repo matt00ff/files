@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Панель Администратора</h2>
+
+<div class="admin-container">
+    <h3>Список пользователей</h3>
+    <ul id="user-list">
+        <li>Загрузка...</li>
+    </ul>
+</div>
+
+<div class="admin-actions">
+    <h3>Действия</h3>
+    <input type="text" id="target-username" placeholder="Введите имя пользователя">
+    <button onclick="banUser()">🔴 Бан</button>
+    <button onclick="unbanUser()">🟢 Разбан</button>
+    <!-- Убираем кнопку мьюта, если она ещё осталась -->
+    <!-- <button onclick="muteUser()">🔇 Мут</button> -->
+    <button onclick="grantAdmin()">⭐ Сделать админом</button>
+    <button onclick="revokeAdmin()">❌ Забрать админку</button>
+</div>
+
+<!-- Кнопка для возвращения в список чатов -->
+<div style="margin-top: 20px;">
+    <a href="{{ url_for('chats') }}" class="back-button">← Вернуться к списку чатов</a>
+</div>
+
+<script type="text/javascript">
+    var socket = io();
+
+    // Получаем список пользователей
+    socket.on("update_user_list", function(data) {
+        var userList = document.getElementById("user-list");
+        userList.innerHTML = "";
+
+        data.users.forEach(function(username) {
+            var li = document.createElement("li");
+            li.textContent = username;
+            userList.appendChild(li);
+        });
+    });
+
+    function getUsername() {
+        return document.getElementById("target-username").value.trim();
+    }
+
+    function banUser() {
+        let username = getUsername();
+        if (username) socket.emit("ban_user", { username: username });
+    }
+
+    function unbanUser() {
+        let username = getUsername();
+        if (username) socket.emit("unban_user", { username: username });
+    }
+
+    function grantAdmin() {
+        let username = getUsername();
+        if (username) socket.emit("grant_admin", { username: username });
+    }
+
+    function revokeAdmin() {
+        let username = getUsername();
+        if (username) socket.emit("revoke_admin", { username: username });
+    }
+</script>
+{% endblock %}

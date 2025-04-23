@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Онлайн-чат</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+</head>
+<body>
+    <!-- Часы -->
+    <div id="clock"></div>
+
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+    <!-- Добавляем переключатель темы -->
+    <div id="theme-switcher" style="position: absolute; top: 10px; left: 10px;">
+        <select id="theme-select">
+            <option value="theme-light">Светлая</option>
+            <option value="theme-dark">Тёмная</option>
+            <option value="theme-contrast">Инверсия</option>
+        </select>
+    </div>
+
+    <script>
+        // При загрузке страницы получаем сохранённую тему (если есть) или используем "theme-light"
+        const savedTheme = localStorage.getItem('theme') || 'theme-light';
+        document.body.classList.add(savedTheme);
+        // Устанавливаем значение селектора согласно сохранённой теме
+        document.getElementById('theme-select').value = savedTheme;
+      
+        // Обработчик для смены темы
+        document.getElementById('theme-select').addEventListener('change', function() {
+          // Удаляем все темы
+          document.body.classList.remove('theme-light', 'theme-dark', 'theme-contrast');
+          const newTheme = this.value;
+          // Применяем выбранную тему
+          document.body.classList.add(newTheme);
+          // Сохраняем выбранную тему в localStorage
+          localStorage.setItem('theme', newTheme);
+        });
+      </script>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, "0");
+            const minutes = String(now.getMinutes()).padStart(2, "0");
+            const seconds = String(now.getSeconds()).padStart(2, "0");
+            document.getElementById("clock").innerText = `${hours}:${minutes}:${seconds}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Онлайн-чат</h2>
+
+<div class="index-container">
+    <!-- Форма входа -->
+    <div class="login-form">
+        <h3>Вход</h3>
+        <form method="POST" action="{{ url_for('login') }}">
+            <label>Логин:</label>
+            <input type="text" name="username" placeholder="Введите логин"><br>
+            <label>Пароль:</label>
+            <input type="password" name="password" placeholder="Введите пароль"><br>
+            <button type="submit">Войти</button>
+        </form>
+        {% if login_error %}
+        <p class="error">{{ login_error }}</p>
+        {% endif %}
+    </div>
+
+    <!-- Форма регистрации -->
+    <div class="register-form">
+        <h3>Регистрация</h3>
+        <form method="POST" action="{{ url_for('register') }}">
+            <label>Логин:</label>
+            <input type="text" name="username" placeholder="Придумайте логин"><br>
+            <label>Пароль:</label>
+            <input type="password" name="password" placeholder="Придумайте пароль"><br>
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+        {% if reg_error %}
+        <p class="error">{{ reg_error }}</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

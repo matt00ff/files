@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Чаты</h2>
+
+<div class="chats-container">
+    <!-- Список чатов -->
+    <div class="chat-list">
+        <h3>Список чатов (максимум {{ max_chats }}):</h3>
+        <ul id="chat-list-ul" data-max-members="{{ max_members }}">
+            {% for chat_name, count in chats %}
+            <li id="chat-{{ chat_name }}">
+                <span>{{ chat_name }} ({{ count }}/{{ max_members }})</span>
+                {% if count < max_members %}
+                    <a href="{{ url_for('join_chat', chat_name=chat_name) }}">[Войти]</a>  
+                {% else %}
+                    <span> (заполнен) </span>
+                {% endif %}
+
+                {% if count == 0 %}
+                    <form action="{{ url_for('delete_chat', chat_name=chat_name) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="delete-btn">Удалить</button>
+                    </form>
+                {% endif %}
+            </li>
+            {% endfor %}
+            {% if not chats %}
+            <li id="no-chats">Чатов пока нет</li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <!-- Создание нового чата -->
+    <div class="chat-creation">
+        <h3>Создать новый чат</h3>
+        <form method="POST" action="{{ url_for('create_chat') }}">
+            <label>Название чата (необязательно):</label>
+            <input type="text" name="chat_name" placeholder="Название" style="margin: 7px 7px 7px 0;"><br>
+            <button type="submit">Создать</button>
+        </form>
+    </div>
+</div>
+
+{% if session["role"] == "admin" %}
+    <div class="admin-panel-btn">
+        <a href="{{ url_for('admin_panel') }}">🔧 Панель Администратора</a>
+    </div>
+{% endif %}
+
+<!-- Выход из аккаунта -->
+<div style="margin-top: 20px;">
+    <a href="{{ url_for('logout') }}">Выйти из аккаунта</a>
+</div>
+
+<script type="text/javascript">
+    var socket = io();
+
+    // При загрузке страницы сообщаем серверу, что мы на странице чатов
+    socket.on("connect", function() {
+        socket.emit("join_chats_page");
+    });
+
+    // Когда сервер рассылает обновлённый список чатов
+    socket.on("chat_list_updated", function(data) {
+        var chatList = document.getElementById("chat-list-ul");
+        chatList.innerHTML = "";  // Очищаем список
+        var maxMembers = parseInt(chatList.getAttribute("data-max-members"));
+
+        if (data.chats.length === 0) {
+            chatList.innerHTML = "<li id='no-chats'>Чатов пока нет</li>";
+            return;
+        }
+
+        data.chats.forEach(function(chat) {
+            var chatName = chat[0];
+            var count = chat[1];
+
+            var li = document.createElement("li");
+            li.id = "chat-" + chatName;
+
+            var chatText = document.createElement("span");
+            chatText.textContent = chatName + " (" + count + "/" + maxMembers + ") ";
+            li.appendChild(chatText);
+
+            if (count < maxMembers) {
+                var joinLink = document.createElement("a");
+                joinLink.href = "/join_chat/" + chatName;
+                joinLink.textContent = "[Войти]";
+                li.appendChild(joinLink);
+            } else {
+                var fullText = document.createElement("span");
+                fullText.textContent = " (заполнен) ";
+                li.appendChild(fullText);
+            }
+
+            if (count === 0) {
+                var deleteForm = document.createElement("form");
+                deleteForm.action = "/delete_chat/" + chatName;
+                deleteForm.method = "POST";
+                deleteForm.style.display = "inline";
+
+                var deleteBtn = document.createElement("button");
+                deleteBtn.type = "submit";
+                deleteBtn.classList.add("delete-btn");
+                deleteBtn.textContent = "Удалить";
+
+                deleteForm.appendChild(deleteBtn);
+                li.appendChild(deleteForm);
+            }
+chatList.appendChild(li);
+        });
+    });
+</script>
+{% if current_user %}
+<div id="profile-link" style="position: fixed; bottom: 10px; left: 10px; display: flex; align-items: center; padding: 5px 10px; border-radius: 10px;">
+    <a href="{{ url_for('profile') }}" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+        <img src="{{ url_for('static', filename='avatars/' ~ (current_user.avatar or 'default.png')) }}" alt="Avatar" style="width:40px; height:40px; border-radius:50%; margin-right: 10px;">
+        <span>{{ current_user.username }}</span>
+    </a>
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- Кнопка возврата на страницу чатов -->
+<a href="{{ url_for('chats') }}" style="text-decoration: none; display: inline-block; margin-bottom: 20px;">
+    ← Вернуться в чаты
+</a>
+
+<h2>Профиль пользователя</h2>
+
+<div class="profile-container" style="text-align: center;">
+    <img src="{{ url_for('static', filename='avatars/' ~ user.avatar) }}" alt="Avatar" style="width:100px; height:100px; border-radius:50%;">
+    <p>Текущий логин: <strong>{{ user.username }}</strong></p>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for msg in messages %}
+          <p style="color: green;">{{ msg }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <form method="POST" enctype="multipart/form-data">
+        <div>
+            <label>Новый логин:</label><br>
+            <input type="text" name="username" placeholder="Новый логин" value="{{ user.username }}">
+        </div>
+        <div>
+            <label>Новый пароль:</label><br>
+            <input type="password" name="password" placeholder="Новый пароль">
+        </div>
+        <div>
+            <label>Загрузить аватар:</label><br>
+            <input type="file" name="avatar">
+        </div>
+        <br>
+        <button type="submit">Обновить профиль</button>
+        <!-- Кнопка для удаления аватарки -->
+        <button type="submit" name="delete_avatar" value="1" style="margin-left: 10px;">Удалить аватар</button>
+    </form>
+</div>
+{% endblock %}
